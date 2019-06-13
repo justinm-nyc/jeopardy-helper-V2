@@ -1,0 +1,143 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+
+    <link rel="stylesheet" href="/css/style.css">
+
+    <title>Jeopardy Buzzer | Add Users and Buzz</title>
+</head>
+
+<body>
+    <div id="jeopardy-helper-app" class="wrapper">
+        <!-- Sidebar -->
+        <nav id="sidebar">
+            <div class="container sidebar-teams-side">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12 sidebar-padding">         
+                            <a href="#" class="btn btn-primary btn-md add-team-button top-button-width" id="add-team-btn" v-on:click="createTeamAndRedirect()">Add a team</a>
+                        </div>
+                        <div class="col-md-12 sidebar-padding">
+                            <a href="#" class="btn btn-primary btn-md clear-teams-button top-button-width" id="clear-teams-btn" v-on:click="deleteTeams()">Clear Teams</a>
+                        </div>
+                        <div class="col-md-12 sidebar-padding">
+                            <a href="#" class="btn btn-primary btn-md clear-buzzer-times-button top-button-width" id="clear-teams-btn" v-on:click="clearClickedTime()">Clear Buzzer Times</a>
+                        </div>
+                        <hr>
+
+                        <div class="col-md-12">
+                            <h2> TEAMS: </h2>
+                            <div v-if="tloaded.length == 0">
+                                <h2> No Teams</h2>
+                            </div>
+                            <ul v-for="item in tloaded">
+                                <a href="#" class="" v-on:click="setSelectedTeam(item)">
+                                    <div class="media">
+                                        <img src="/images/teams-white.png" height="22" width="22" class="mr-2" alt="Team Icon">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ item }}</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>  
+        </nav>
+
+        <nav class="navbar navbar-expand-lg sticky-top mobile-nav">
+            <span class="navbar-brand wide">
+                <img src="/images/jeopardy-logo.png" class="mr-3 logo" alt="...">
+                <span><h4 class="title">BUZZER</h4></span>
+            </span>
+        </nav>
+
+        <div id="content" class="fullscreen">
+            <div class="container col-12">
+                <div class="desktop-nav">
+                    <img src="/images/jeopardy-logo.png" class="mr-3 logo" alt="...">
+                    <span><h4 class="title">BUZZER</h4></span>
+                </div>
+            </div>
+
+            <div class="container teams-side">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-12">         
+                            <a href="#" class="btn btn-primary btn-lg add-team-button top-button-width" id="add-team-btn" v-on:click="createTeamAndRedirect()">Add a team</a>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary btn-lg clear-teams-button top-button-width" id="clear-teams-btn" v-on:click="deleteTeams()">Clear Teams</a>
+                        </div>
+                        <div class="col-md-12">
+                            <a href="#" class="btn btn-primary btn-lg clear-buzzer-times-button top-button-width" id="clear-teams-btn" v-on:click="clearClickedTime()">Clear Buzzer Times</a>
+                        </div>
+                        <hr>
+
+                        <div class="col-md-4">
+                            <h2> TEAMS: </h2>
+                            <div v-if="tloaded.length == 0">
+                                <h2> No Teams</h2>
+                            </div>
+                            <ul v-for="item in tloaded">
+                                <a href="#" class="" v-on:click="setSelectedTeam(item)">
+                                    <div class="media">
+                                        <img src="/images/teams-black.png" height="22" width="22" class="mr-2" alt="Team Icon">
+                                        <div class="media-body">
+                                            <h5 class="mt-0">{{ item }}</h5>
+                                        </div>
+                                    </div>
+                                </a>
+                            </ul>
+                        </div>
+
+                    </div>
+                </div>
+            </div>  
+                
+            <div class="container">
+                <div class="col-12 buzzer-side">      
+                    <h2 class="selected-team">SELECTED TEAM:</h2>
+                    <h3>{{ selectedTeam }} </h3>
+                    <div v-if="selectedTeam == 'No team has been selected'">
+                        <h6>To select a team, click one of the available teams.</h6>
+                    </div>
+                    <div class="container buzzer" v-if="selectedTeam != 'No team has been selected'">
+                        <a href="#" class="btn btn-danger btn-lg buzzer-button" v-if="!buzzedTeamNames.includes(selectedTeam)" v-on:click="updateClickedTime(selectedTeam)">Buzzer</a>
+                        <h2 class="buzzed-teams">BUZZED TEAMS:</h2>
+                        <ul v-for="(team, index) in orderedBuzzClicks">
+                            {{ index+1 }}. {{ team.name }}
+                        </ul>
+                    </div>
+                </div>
+            </div>  
+        </div>
+    </div>
+   
+    <!-- development version, includes helpful console warnings -->
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!-- production version, optimized for size and speed -->
+    <!-- <script src="https://cdn.jsdelivr.net/npm/vue"></script> -->
+    
+    <script src="https://cdn.jsdelivr.net/combine/npm/jquery@3.2.1,npm/axios@0.17.0/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.11/lodash.min.js"></script>
+    
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    
+    <script src="/app.js"></script>
+
+</body>
+</html>

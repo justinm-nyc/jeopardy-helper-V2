@@ -1,0 +1,199 @@
+.navbar .navbar-brand {
+    margin: 0;
+}
+.navbar .navbar-brand.wide {
+    width: 100%;
+    display: block;
+    text-align: center;
+}
+
+
+ul {
+    margin-bottom: 0px;
+    padding-left: 0px;
+}
+
+
+.buzzer-button{
+    margin-bottom: 25px;
+}
+
+.title{
+    color:  #007991;
+}
+
+.top-button-width{
+    width: 205px;
+}
+
+.clear-buzzer-times-button{
+    background-color: #A0B2A6;
+    border-color: #A0B2A6;
+    margin-top: 5px;
+}
+
+.clear-teams-button{
+    background-color: #439A86;
+    border-color: #439A86;
+    margin-top: 5px;
+}    
+
+.add-team-button{
+    background-color: #007991;
+    border-color: #007991;
+}
+
+.media{
+    text-align: left;
+    color: black;
+}
+
+.buzzer-side{
+    padding-top: 20px;
+    margin-bottom: 50px;
+}
+
+/* Desktop Version */
+@media (min-width: 601px){
+    #sidebar {
+        display:block;
+        min-width: 250px;
+        max-width: 250px;
+        min-height: 100vh;
+        background-color: #292F36;
+        /* position: fixed; */
+        top: 0;
+        left: 0;
+        /* top layer */
+        z-index: 9999;
+    }
+
+    #content{
+        margin-top: 45px;
+        text-align:center;
+        margin-left: 250px;
+    }
+
+    .sidebar-padding{
+        padding-left: 8px;
+    }
+
+    .fullscreen {
+        position: fixed;
+        top: 0;
+        left: 0;
+        bottom: 0;
+        right: 0;
+        overflow: auto;
+      }
+
+    .sidebar-teams-side{
+        margin-top: 45px;
+        text-align: center;
+        color: white;
+    }
+
+    .media-body{
+        color: white;
+    }
+    
+    .teams-side{
+        display: none;
+    }
+
+    .mobile-nav{
+        display:none;
+    }
+
+    .logo{
+        max-width: 20%;
+    }
+
+    .desktop-nav{
+        margin-bottom: 50px;
+    }
+
+    .buzzer-side >  h2{
+        margin-bottom: 0px;
+    }
+
+    .buzzer{
+        margin-top: 25px;
+    }
+
+
+    .wrapper {
+        display: flex;
+        width: 100%;
+        align-items: stretch;
+    }
+
+    ul{
+        padding: auto;
+        margin: auto;
+        width: 50%;
+    }
+}
+
+/* Mobile Version */
+@media (max-width: 600px){
+    #sidebar {
+        display:none;
+    }
+
+    body{
+        background-color: #292F36;
+    }
+
+    ul{
+        padding: auto;
+        margin: auto;
+        width: 32%;
+    }
+
+    .desktop-nav{
+        display: none;
+    }
+
+    .buzzer-side{
+        background-color: #292F36;
+        color: white;
+        text-align: center;
+    }
+
+
+    .buzzer-side >  h2{
+        color: #439A86;
+    }
+
+    .buzzed-teams{
+        color: #A0B2A6;
+    }
+
+
+    .buzzer{
+        margin-top: 25px;
+    }
+
+    .teams-side{
+        color: black;
+        text-align: center;
+        padding-bottom: 20px;
+        padding-top: 20px;
+        text-align: center;
+        background-color: #F1F5F2;
+    }
+
+    .logo{
+        width: 65%
+    }
+
+
+    .navbar{
+        background-color: #F1F5F2;
+    }
+
+    .selected-team{
+        margin-bottom: 0px;
+    }
+}

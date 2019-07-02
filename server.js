@@ -10,22 +10,6 @@ app.use(bodyParser.urlencoded({ extended: true }))
 // parse requests of content-type - application/json
 app.use(bodyParser.json())
 
-// Configuring the database
-const dbConfig = require('./config/database.config.js');
-const mongoose = require('mongoose');
-
-mongoose.Promise = global.Promise;
-
-// Connecting to the database
-mongoose.connect(dbConfig.url, {
-    useNewUrlParser: true
-}).then(() => {
-    console.log("Successfully connected to the database");    
-}).catch(err => {
-    console.log('Could not connect to the database. Exiting now...', err);
-    process.exit();
-});
-
 // ------------------------------------------------------
 // Define Routes: Static
 // ------------------------------------------------------
@@ -33,7 +17,7 @@ app.get('/', (req, res) => res.sendFile(__dirname + '/views/index.html'))
 app.use(express.static(path.join(__dirname, 'public')));
 
 // ------------------------------------------------------
-// Require Notes routes
+// Require team routes
 // ------------------------------------------------------
 require('./app/routes/team.routes.js')(app);
 

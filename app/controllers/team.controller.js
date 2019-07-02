@@ -1,7 +1,9 @@
 const Team = require('../models/team.model.js');
 
+var teams = [];
 // Create a new team
 exports.create = (req, res) => {
+    console.log("\ncreate called");
     // Validate request
     if(!req.params.teamName) {
         return res.status(400).send({
@@ -9,38 +11,64 @@ exports.create = (req, res) => {
         });
     }
 
-    // Create a team
-    const team = new Team({
-        name: req.params.teamName, 
-        clickedTime: ''
-    });
+    var exists = false;
 
-    // Save Team in the database
-    team.save()
-    .then(data => {
-        res.send(data);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while creating the team."
+    if(teams.length == 0){
+        // Create a team
+        const team = new Team({
+            name: req.params.teamName, 
+            clickedTime: ''
         });
-    });
-};
+
+        //Push new team to array
+        teams.push(team);   
+    } else {
+        teams.forEach(function(team){
+            if(team.name == req.params.teamName){
+                exists = true;
+            }
+        });
+
+        if(exists == false){
+            // Create a team
+            const team = new Team({
+                name: req.params.teamName, 
+                clickedTime: ''
+            });
+            
+            //Push new team to array
+            teams.push(team);
+            return res.send(team)
+        }
+        else if(exists == true){
+                return res.send('Team already exists.')
+            }
+        }
+    
+
+    // // Save Team in the database
+    // team.save()
+    // .then(data => {
+    //     res.send(data);
+    // }).catch(err => {
+    //     res.status(500).send({
+    //         message: err.message || "Some error occurred while creating the team."
+    //     });
+    // });
+
+    console.log(teams)
+}
 
 // Retrieve all Teams
 exports.findAll = (req, res) => {
-    Team.find()
-    .then(teams => {
-        res.send(teams);
-    }).catch(err => {
-        res.status(500).send({
-            message: err.message || "Some error occurred while retrieving teams."
-        });
-    });
+    res.send(teams);
+
 };
 
 
 // Update a team clickTime with timestamp
 exports.update = (req, res) => {
+    console.log("\nupdate called");
     // Validate Request
     if(!req.params.teamName) {
         return res.status(400).send({
@@ -48,64 +76,33 @@ exports.update = (req, res) => {
         });
     }
 
-    // Find note and update it with the request body
-    Team.findOneAndUpdate(
-        {"name": req.params.teamName}, 
-        {clickedTime: Date.now()},
-        {new: true})
-    .then(team => {
-        if(!team) {
-            return res.status(404).send({
-                message: "Team not found with team name: " + req.params.teamName
-            });
+    //Using teams array
+    var currentTime = Date.now();
+    teams.forEach(function(team){
+        if(team.name == req.params.teamName){
+            team.clickedTime = currentTime;
         }
-        res.send(team);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Team not found with team name " + req.params.teamName
-            });                
-        }
-        return res.status(500).send({
-            message: "Error updating team with team name " + req.params.teamName
-        });
     });
 };
 
 // Clear teams clickTime
 exports.clearClickTimeStamp = (req, res) => {
-    Team.updateMany({},
-        {"clickedTime": ''},
-        {
-            upsert: false,
-            multi: true,
-        }
-    )
-    .then(team => {
-        if(!team) {
-            return res.status(404).send({
-                message: "Teams not found"
-            });
-        }
-        res.send(team);
-    }).catch(err => {
-        if(err.kind === 'ObjectId') {
-            return res.status(404).send({
-                message: "Teams not found"
-            });                
-        }
-        return res.status(500).send({
-            message: "Error updating teams"
-        });
+    console.log("\nclearClickTimeStamp called");
+    //Using teams array
+    teams.forEach(function(team){
+        team.clickedTime = '';
     });
+
+    console.log(teams)
 
 };
 
 // Delete all teams
 exports.delete = (req, res) => {
-    var myquery = { __v: 0 };
-    Team.deleteMany(myquery, function(err, obj) {
-      if (err) throw err;
-    })
-    
+    console.log("\ndelete called");
+    //Using teams array
+    teams = []
+    if(teams.length == 0){
+        console.log("Teams have been cleared")
+    }    
 };

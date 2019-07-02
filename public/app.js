@@ -60,7 +60,12 @@ var vm = new Vue({
             if(teamName != null){
             teamName = teamName.replace(' ','')
                 axios.post('/teams/' + teamName)
-                .then(response => console.log(response.data))
+                .then(function (response) {
+                    console.log(response.data);
+                    if(response.data == 'Team already exists.'){
+                        alert("That team already exists!");
+                    }
+                  });
             }
         },
         reloadTeams: async function(){
